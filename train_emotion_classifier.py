@@ -10,6 +10,10 @@ from load_and_process import preprocess_input
 from models.cnn import mini_XCEPTION
 from sklearn.model_selection import train_test_split
 
+from sklearn.svm import SVC
+from skmultilea rn.adapt import MLkNN
+
+
 # parameters
 batch_size = 32
 num_epochs = 10000
@@ -62,3 +66,14 @@ model.fit_generator(data_generator.flow(xtrain, ytrain,
                         steps_per_epoch=len(xtrain) / batch_size,
                         epochs=num_epochs, verbose=1, callbacks=callbacks,
                         validation_data=(xtest,ytest))
+
+
+# SVM
+svm_model = SVC(probability=True)
+svm_model.fit(xtrain, ytrain)
+svm_predictions = svm_model.predict(xtest)
+
+# MLkNN
+mlknn_model = MLkNN(k=10)
+mlknn_model.fit(xtrain, ytrain)
+mlknn_predictions = mlknn_model.predict(xtest)
