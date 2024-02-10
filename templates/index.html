@@ -2,8 +2,20 @@
 <html lang="en">
 <head>
     <title>Video Streaming</title>
+    <style>
+        .container {
+            display: flex;
+            justify-content: space-around;
+        }
+        .container img {
+            width: 45%;
+        }
+    </style>
 </head>
 <body>
-    <img src="{{ url_for('video_feed') }}">
+    <div class="container">
+        <img src="{{ url_for('video_feed') }}">
+        <img src="{{ url_for('canvas_feed') }}">
+    </div>
 </body>
 </html>
