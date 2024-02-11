@@ -1,4 +1,4 @@
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, jsonify
 from keras.preprocessing.image import img_to_array
 import imutils
 import cv2
@@ -11,6 +11,8 @@ emotion_model_path = 'models/_mini_XCEPTION.102-0.66.hdf5'
 face_detection = cv2.CascadeClassifier(detection_model_path)
 emotion_classifier = load_model(emotion_model_path, compile=False)
 EMOTIONS = ["angry" ,"disgust","scared", "happy", "sad", "surprised", "neutral"]
+emotion_counts = {emotion: 0 for emotion in EMOTIONS}
+
 
 app = Flask(__name__)
 
@@ -34,6 +36,7 @@ def gen_frames():
             preds = emotion_classifier.predict(roi)[0]
             emotion_probability = np.max(preds)
             label = EMOTIONS[preds.argmax()]
+            emotion_counts[label] += 1
         else: continue
         cv2.putText(frameClone, label, (fX, fY - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
         cv2.rectangle(frameClone, (fX, fY), (fX + fW, fY + fH), (0, 0, 255), 2)
@@ -59,6 +62,7 @@ def gen_canvas():
             preds = emotion_classifier.predict(roi)[0]
             emotion_probability = np.max(preds)
             label = EMOTIONS[preds.argmax()]
+            emotion_counts[label] += 1
         else: continue
         for (i, (emotion, prob)) in enumerate(zip(EMOTIONS, preds)):
             text = "{}: {:.2f}%".format(emotion, prob * 100)
@@ -76,6 +80,10 @@ def video_feed():
 @app.route('/canvas_feed')
 def canvas_feed():
     return Response(gen_canvas(), mimetype='multipart/x-mixed-replace; boundary=canvas')
+
+@app.route('/emotion_stats')
+def emotion_stats():
+    return jsonify(emotion_counts)
 
 @app.route('/')
 def index():
