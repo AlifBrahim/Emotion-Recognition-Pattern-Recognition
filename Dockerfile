@@ -10,6 +10,7 @@ ADD . /app
 # Install any needed packages specified in requirements.txt
 RUN apt-get update && apt-get install -y \
     libgl1-mesa-glx \
+        libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/* \
     && pip install --upgrade pip && \
     pip install --no-cache-dir opencv_python keras pandas numpy imutils scikit_learn flask tensorflow
