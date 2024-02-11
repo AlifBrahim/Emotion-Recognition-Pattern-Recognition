@@ -102,6 +102,12 @@ def feedback():
         feedback = "No facial expression detected."
     return jsonify({"feedback": feedback})
 
+@app.route('/reset')
+def reset():
+    global emotion_counts
+    emotion_counts = {emotion: 0 for emotion in EMOTIONS}
+    return "Emotion counts reset"
+
 
 
 

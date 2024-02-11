@@ -109,6 +109,8 @@ canvasFeedImg.addEventListener('load', removeSkeletonLoader);
             streaming = true;
             document.querySelector('.chart-container').style.display = 'none'; // This will hide the chart container
             document.getElementById('feedback').textContent = '';
+             // Reset emotion counts
+            fetch('{{ url_for('reset') }}');
         } else {
             document.querySelector('img[src="{{ url_for('video_feed') }}"]').style.display = 'none';
             document.querySelector('img[src="{{ url_for('canvas_feed') }}"]').style.display = 'none';
