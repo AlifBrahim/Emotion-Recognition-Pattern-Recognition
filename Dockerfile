@@ -8,7 +8,10 @@ WORKDIR /app
 ADD . /app
 
 # Install any needed packages specified in requirements.txt
-RUN pip install --upgrade pip && \
+RUN apt-get update && apt-get install -y \
+    libgl1-mesa-glx \
+    && rm -rf /var/lib/apt/lists/* \
+    && pip install --upgrade pip && \
     pip install --no-cache-dir opencv_python keras pandas numpy imutils scikit_learn flask tensorflow
 
 # Make port 5000 available to the world outside this container
