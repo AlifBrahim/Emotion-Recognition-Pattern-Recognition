@@ -85,6 +85,26 @@ def canvas_feed():
 def emotion_stats():
     return jsonify(emotion_counts)
 
+@app.route('/feedback')
+def feedback():
+    total = sum(emotion_counts.values())
+    feedback = ""
+    if total > 0:
+        for emotion, count in emotion_counts.items():
+            percentage = (count / total) * 100
+            if emotion == "happy" and percentage > 50:
+                feedback += "You seem too happy throughout the recording. Try to inject more variety of facial expressions. "
+            elif emotion == "neutral" and percentage > 50:
+                feedback += "Your expression was neutral for most of the recording. Try to show more emotions. "
+            elif emotion == "angry" and percentage > 50:
+                feedback += "You seemed angry for a significant portion of the recording. Try to maintain a more positive demeanor. "
+    else:
+        feedback = "No facial expression detected."
+    return jsonify({"feedback": feedback})
+
+
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
